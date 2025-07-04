@@ -4,7 +4,7 @@ const minSubArrayLen = (arr, num) => {
   let startIndex = 0;
   for (let i = 0; i < arr.length; i++) {
     currentTotal += arr[i];
-    while (currentTotal >= num && startIndex <= i) {
+    while (currentTotal >= num) {
       currentTotal = currentTotal - arr[startIndex];
       smallestSubArrLen = Math.min(smallestSubArrLen, i - startIndex + 1);
       startIndex += 1;
