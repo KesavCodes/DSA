@@ -9,5 +9,16 @@ const reverse = (str) => {
   return getReversedString(str.length - 1);
 };
 
-console.log(reverse("awesome")); // 'emosewa'
-console.log(reverse("rithmschool")); // 'loohcsmhtir'
+
+// example: revApp2(abc)
+// revApp2(bc) + a => cba
+// revApp2(c) + b => cb
+const reverseApproach2 = (str) => {
+  if (str.length <= 1) return str;
+  return reverseApproach2(str.slice(1)) + str[0];
+};
+
+
+
+console.log(reverseApproach2("awesome")); // 'emosewa'
+console.log(reverseApproach2("rithmschool")); // 'loohcsmhtir'
