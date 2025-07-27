@@ -25,34 +25,83 @@ class SinglyLinkedList {
     this.length++;
     return this;
   }
-  pop() {
+  isListEmpty() {
     if (this.length === 0) {
       console.log("List is Empty!");
-      return null;
-    } else if (this.length === 1) {
-      const temp = this.head;
+      return true;
+    }
+    return false;
+  }
+  isListHasOnlyOneNode() {
+    if (this.length === 1) {
+      const current = this.head;
       this.head = null;
       this.tail = null;
       this.length--;
-      return temp;
-    } else {
-      let list = this.head;
-      let pre = null;
-      while (list.next) {
-        pre = list;
-        list = list.next;
-      }
-      pre.next = null;
-      this.tail = pre;
-      this.length--;
-      return list;
+      return current;
     }
+    return null;
+  }
+  pop() {
+    if (this.isListEmpty()) return null;
+    const handleSingleNode = this.isListHasOnlyOneNode();
+    if (handleSingleNode) return handleSingleNode;
+    let current = this.head;
+    let pre = null;
+    while (current.next) {
+      pre = current;
+      current = current.next;
+    }
+    pre.next = null;
+    this.tail = pre;
+    this.length--;
+    return current;
+  }
+  unshift(val) {
+    const node = new Node(val);
+    if (this.head === null) {
+      this.head = node;
+      this.tail = node;
+    } else {
+      node.next = this.head;
+      this.head = node;
+    }
+    this.length++;
+    return this;
+  }
+  shift() {
+    if (this.isListEmpty()) return null;
+    const handleSingleNode = this.isListHasOnlyOneNode();
+    if (handleSingleNode) return handleSingleNode;
+    const current = this.head;
+    this.head = this.head.next;
+    current.next = null;
+    this.length--;
+    return current;
+  }
+
+  get(index) {
+    if (index > this.length - 1 || index < 0) {
+      console.log(
+        `Invalid Index. Total list length is ${
+          this.length
+        } and valid index is between 0 and ${this.length - 1}`
+      );
+      return null;
+    }
+    let currentIndex = 0;
+    let current = this.head;
+    while (currentIndex < index) {
+      current = current.next;
+      currentIndex++;
+    }
+    return current.val;
   }
   traverse() {
-    let list = this.head;
-    while (list) {
-      console.log(list.val);
-      list = list.next;
+    let current = this.head;
+    while (current) {
+      console.log(current.val);
+      current = current.next;
     }
   }
 }
@@ -62,17 +111,28 @@ const sLinkedList = new SinglyLinkedList();
 sLinkedList.push("Hi");
 sLinkedList.push("There");
 sLinkedList.push("How have you been?");
+sLinkedList.traverse();
 
-console.log(sLinkedList.length);
+console.log(sLinkedList.get(0), "--get index 0");
+console.log(sLinkedList.get(2), "--get index 2");
+console.log(sLinkedList.get(3), "--get index 3");
+
+console.log(sLinkedList.pop());
+console.log(sLinkedList.pop());
+console.log(sLinkedList.pop());
+console.log(sLinkedList.pop());
+
+sLinkedList.unshift("I am back");
+sLinkedList.unshift("Back Again");
+sLinkedList.unshift("So Back");
+sLinkedList.traverse();
+
+console.log(sLinkedList.shift());
+console.log(sLinkedList.shift());
+console.log(sLinkedList.shift());
+console.log(sLinkedList.shift());
 
 sLinkedList.traverse();
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
-console.log(sLinkedList.pop());
 
 // const first = new Node("Hi");
 // first.next = new Node("There");
