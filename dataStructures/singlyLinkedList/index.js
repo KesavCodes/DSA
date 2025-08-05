@@ -13,7 +13,7 @@ class SinglyLinkedList {
     this.tail = null;
     this.length = 0;
   }
-  
+
   push(val) {
     const node = new Node(val);
     if (this.head === null) {
@@ -125,12 +125,42 @@ class SinglyLinkedList {
     return false;
   }
 
+  remove(index) {
+    if (index < 0 || index >= this.length) return null;
+    if (index === 0) return this.shift();
+    if (index === this.length - 1) return this.pop();
+    const prevNode = this.get(index - 1);
+    if (prevNode) {
+      const nodeToBeRemoved = prevNode.next;
+      prevNode.next = nodeToBeRemoved.next;
+      nodeToBeRemoved.next = null;
+      this.length--;
+      return nodeToBeRemoved;
+    }
+    return null;
+  }
+
   traverse() {
     let current = this.head;
+    let linkedListStr = "|";
     while (current) {
-      console.log(current.val);
+      linkedListStr += `-->${current.val}`;
       current = current.next;
     }
+    console.log(linkedListStr);
+  }
+
+  reverse() {
+    let prev = null;
+    let current = this.head;
+    while (current) {
+      let temp = current.next;
+      current.next = prev;
+      prev = current;
+      current = temp;
+    }
+    [this.head, this.tail] = [this.tail, this.head];
+    return this.head;
   }
 }
 
@@ -141,17 +171,19 @@ sLinkedList.push("There");
 sLinkedList.push("How have you been?");
 // sLinkedList.traverse();
 
-console.log(sLinkedList.get(0), "--get index 0");
-console.log(sLinkedList.get(2), "--get index 2");
-console.log(sLinkedList.get(3), "--get index 3");
+// console.log(sLinkedList.get(0), "--get index 0");
+// console.log(sLinkedList.get(2), "--get index 2");
+// console.log(sLinkedList.get(3), "--get index 3");
 
-sLinkedList.insert(1, "Hello from one");
+// sLinkedList.insert(1, "Hello from one");
 
 // sLinkedList.set(2, 'I am good');
 // sLinkedList.set(0, 'Hello');
 // sLinkedList.set(3, 'Test');
 
-console.log(sLinkedList.get(3), "--get index 3");
+// console.log(sLinkedList.remove(1), "--remove node");
+
+// console.log(sLinkedList.get(0), "--get index 3");
 // console.log(sLinkedList.get(2), "--get index 2");
 
 // console.log(sLinkedList.pop());
@@ -169,6 +201,8 @@ console.log(sLinkedList.get(3), "--get index 3");
 // console.log(sLinkedList.shift());
 // console.log(sLinkedList.shift());
 
+sLinkedList.traverse();
+console.log(sLinkedList.reverse());
 sLinkedList.traverse();
 
 // const first = new Node("Hi");
