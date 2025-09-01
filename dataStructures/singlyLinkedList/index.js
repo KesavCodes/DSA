@@ -160,6 +160,19 @@ class SinglyLinkedList {
       current = temp;
     }
     [this.head, this.tail] = [this.tail, this.head];
+    return this;
+  }
+
+  rotate(count) {
+    for (let i = 0; i < Math.abs(count); i++) {
+      if (count > 0) {
+        const firstElement = this.shift();
+        this.push(firstElement.val);
+      } else {
+        const lastElement = this.pop();
+        this.unshift(lastElement.val);
+      }
+    }
     return this.head;
   }
 }
@@ -201,10 +214,15 @@ sLinkedList.push("How have you been?");
 // console.log(sLinkedList.shift());
 // console.log(sLinkedList.shift());
 
-sLinkedList.traverse();
-console.log(sLinkedList.reverse());
+// sLinkedList.traverse();
+// console.log(sLinkedList.reverse());
+// sLinkedList.pop();
 sLinkedList.traverse();
 
 // const first = new Node("Hi");
 // first.next = new Node("There");
 // first.next.next = new Node("How have you been?");
+
+sLinkedList.rotate(1);
+
+sLinkedList.traverse();
