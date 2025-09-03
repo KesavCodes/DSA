@@ -79,12 +79,83 @@ class DoublyLinkedList {
     this.length++;
     return this;
   }
+  get(index) {
+    if (index < 0 || index > this.length - 1) return null;
+    let curr;
+    if (index <= (this.length - 1) / 2) {
+      let currIndex = 0;
+      curr = this.head;
+      while (currIndex < index) {
+        curr = curr.next;
+        currIndex++;
+      }
+    } else {
+      let currIndex = this.length - 1;
+      curr = this.tail;
+      while (currIndex > index) {
+        curr = curr.prev;
+        currIndex--;
+      }
+    }
+    return curr;
+  }
+  set(index, val) {
+    if (index === this.length) return !!this.push(val);
+    const foundNode = this.get(index);
+    if (!foundNode) return false;
+    foundNode.val = val;
+    return true;
+  }
+  insert(index, val) {
+    if (index === 0) return !!this.unshift(val);
+    else if (index === this.length) return !!this.push(val);
+    const prevNode = this.get(index - 1);
+    if (!prevNode) return false;
+    const nextNode = prevNode.next;
+    const newNode = new Node(val);
+    // Changing links between the nodes
+    prevNode.next = newNode;
+    newNode.prev = prevNode;
+    newNode.next = nextNode;
+    nextNode.prev = newNode;
+    this.length++;
+    return true;
+  }
+  remove(index) {
+    if (index === 0) return this.shift();
+    if (index === this.length - 1) return this.pop();
+    const nodeToBeRemoved = this.get(index);
+    if (!nodeToBeRemoved) return undefined;
+    const prevNode = nodeToBeRemoved.prev;
+    const nextNode = nodeToBeRemoved.next;
+    nodeToBeRemoved.prev = null;
+    nodeToBeRemoved.next = null;
+    prevNode.next = nextNode;
+    nextNode.prev = prevNode;
+    this.length--;
+    return nodeToBeRemoved;
+  }
+  traverse() {
+    let doublyLinkedListString = "|";
+    let curr = this.head;
+    while (curr) {
+      doublyLinkedListString += `-->${curr.val}`;
+      curr = curr.next;
+    }
+    console.log(doublyLinkedListString);
+  }
 }
 
-const doublyLinkedList = new DoublyLinkedList().push(5).push(10).unshift(15).push(20);
+const doublyLinkedList = new DoublyLinkedList()
+  .push(5)
+  .push(10)
+  .push(15)
+  .push(20)
+  .push(25)
+  .push(30);
 
-console.log(doublyLinkedList.shift());
-console.log(doublyLinkedList);
+doublyLinkedList.traverse();
 
-console.log(doublyLinkedList.shift());
-console.log(doublyLinkedList);
+doublyLinkedList.remove(2);
+
+doublyLinkedList.traverse();
