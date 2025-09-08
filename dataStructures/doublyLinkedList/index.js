@@ -108,7 +108,7 @@ class DoublyLinkedList {
   }
   insert(index, val) {
     if (index === 0) return !!this.unshift(val);
-    else if (index === this.length) return !!this.push(val);
+    if (index === this.length) return !!this.push(val);
     const prevNode = this.get(index - 1);
     if (!prevNode) return false;
     const nextNode = prevNode.next;
@@ -135,6 +135,21 @@ class DoublyLinkedList {
     this.length--;
     return nodeToBeRemoved;
   }
+
+  reverse(){
+    let prev = null;
+    let curr = this.head;
+    while(curr){
+      const next = curr.next;
+      curr.next = prev;
+      curr.prev = next;
+      prev = curr;
+      curr = next;
+    }
+    [this.head, this.tail] = [this.tail, this.head];
+    return this;
+  }
+
   traverse() {
     let doublyLinkedListString = "|";
     let curr = this.head;
@@ -156,6 +171,6 @@ const doublyLinkedList = new DoublyLinkedList()
 
 doublyLinkedList.traverse();
 
-doublyLinkedList.remove(2);
+doublyLinkedList.reverse();
 
 doublyLinkedList.traverse();
