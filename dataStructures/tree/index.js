@@ -81,31 +81,55 @@ class BinarySearchTree {
     const min = this.secondMin(curr.left);
     return !min ? curr : min;
   }
+
   maxNode(curr) {
     if (curr) return undefined;
     if (!curr.right) return curr;
     return this.maxNode(this.right);
   }
 
-  remove(val) {
-    if (!this.root) return undefined;
-    const foundNode = this.find(val);
-    if (!foundNode) return undefined;
-    if (foundNode.left && foundNode.right) {
-      const secondMin = this.secondMin(foundNode.right);
-      foundNode.val = secondMin.left.val;
-      secondMin.left = null;
-    } else if (foundNode.left || foundNode.right) {
-      if (foundNode.left) {
-        foundNode.val = foundNode.left.val;
-        foundNode.left = null;
-      } else {
-        foundNode.val = foundNode.right.val;
-        foundNode.right = null;
-      }
-    } else {
-      foundNode.val = null;
+  preOrderDfs(node = this.root) {
+    if (!node) return [];
+    const left = this.preOrderDfs(node.left);
+    const right = this.preOrderDfs(node.right);
+    return [node.val, ...left, ...right];
+  }
+
+  inOrderDfs(node = this.root) {
+    if (!node) return [];
+    const left = this.inOrderDfs(node.left);
+    const right = this.inOrderDfs(node.right);
+    return [...left, node.val, ...right];
+  }
+
+  postOrderDfs(node = this.root) {
+    if (!node) return [];
+    const left = this.postOrderDfs(node.left);
+    const right = this.postOrderDfs(node.right);
+    return [...left, ...right, node.val];
+  }
+
+  dfs(type = "inOrder") {
+    if (type === "inOrder") return this.inOrderDfs();
+    else if (type === "preOrder") return this.preOrderDfs();
+    else if (type === "postOrder") return this.postOrderDfs();
+    return undefined;
+  }
+
+  bfs() {
+    if (!this.root) {
+      console.log("The Tree is empty");
+      return;
     }
+    const visited = [];
+    const nodeArr = [this.root];
+    while (nodeArr.length) {
+      const poppedElement = nodeArr.shift();
+      visited.push(poppedElement.val);
+      if (poppedElement.left) nodeArr.push(poppedElement.left);
+      if (poppedElement.right) nodeArr.push(poppedElement.right);
+    }
+    return visited;
   }
 }
 
@@ -119,15 +143,16 @@ const bst = new BinarySearchTree();
 
 bst
   .insertRecursion(10)
-  .insertRecursion(12)
-  .insertRecursion(6)
-  .insertRecursion(2)
+  .insertRecursion(5)
+  .insertRecursion(15)
+  .insertRecursion(1)
   .insertRecursion(8)
   .insertRecursion(12)
-  .insertRecursion(16)
-  .insertRecursion(11);
+  .insertRecursion(18);
 
-bst.remove(10);
+console.log(bst.dfs("preOrder"));
+console.log(bst.dfs("inOrder"));
+console.log(bst.dfs("postOrder"));
 
 // console.log(bst.find(10));
 // console.log(bst.find(9));
