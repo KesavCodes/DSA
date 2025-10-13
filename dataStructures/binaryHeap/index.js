@@ -14,16 +14,57 @@ class MaxBinaryHeap {
         this.values[parentIndex],
         this.values[childIndex],
       ];
-      const temp = Math.floor((parentIndex - 1) / 2);
       childIndex = parentIndex;
+      const temp = Math.floor((childIndex - 1) / 2);
       parentIndex = temp;
     }
     return this;
+  }
+
+  extractMax() {
+    const extractedElem = this.values[0];
+    const currValue = this.values.pop();
+    if (this.values.length) {
+      let currIndex = 0;
+      this.values[0] = currValue;
+      while (true) {
+        let leftValue =
+          this.values[2 * currIndex + 1] || Number.MIN_SAFE_INTEGER;
+        let rightValue =
+          this.values[2 * currIndex + 2] || Number.MIN_SAFE_INTEGER;
+        if (leftValue > currValue || rightValue > currValue) {
+          this.values[currIndex] =
+            leftValue > rightValue ? leftValue : rightValue;
+          currIndex = 2 * currIndex + (leftValue > rightValue ? 1 : 2);
+          this.values[currIndex] = currValue;
+        } else break;
+      }
+    }
+    return extractedElem;
   }
 }
 
 const maxBinaryHeap = new MaxBinaryHeap();
 
-maxBinaryHeap.insert(100).insert(19).insert(36).insert(204).insert(6).insert(120);
+maxBinaryHeap
+  .insert(100)
+  .insert(19)
+  .insert(36)
+  .insert(204)
+  .insert(6)
+  .insert(120);
 
-console.log(maxBinaryHeap.values)
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax());
+
+console.log(maxBinaryHeap.values);
+maxBinaryHeap.insert(50);
+maxBinaryHeap.insert(120);
+console.log(maxBinaryHeap.values);
+console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.values);
