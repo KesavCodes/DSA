@@ -15,8 +15,7 @@ class MaxBinaryHeap {
         this.values[childIndex],
       ];
       childIndex = parentIndex;
-      const temp = Math.floor((childIndex - 1) / 2);
-      parentIndex = temp;
+      parentIndex = Math.floor((childIndex - 1) / 2);
     }
     return this;
   }
@@ -54,17 +53,17 @@ maxBinaryHeap
   .insert(6)
   .insert(120);
 
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.extractMax());
+console.log(maxBinaryHeap.extractMax()); // 204
+console.log(maxBinaryHeap.extractMax()); // 120
+console.log(maxBinaryHeap.extractMax()); // 100
+console.log(maxBinaryHeap.extractMax()); // 39
+console.log(maxBinaryHeap.extractMax()); // 19
+console.log(maxBinaryHeap.extractMax()); // 6 
+console.log(maxBinaryHeap.extractMax()); // undefined
 
-console.log(maxBinaryHeap.values);
+console.log(maxBinaryHeap.values); // []
 maxBinaryHeap.insert(50);
 maxBinaryHeap.insert(120);
-console.log(maxBinaryHeap.values);
-console.log(maxBinaryHeap.extractMax());
-console.log(maxBinaryHeap.values);
+console.log(maxBinaryHeap.values); // [120, 50]
+console.log(maxBinaryHeap.extractMax()); // 120
+console.log(maxBinaryHeap.values); // [50]
