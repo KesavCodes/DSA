@@ -1,173 +1,140 @@
 class Node {
-  constructor(value) {
-    this.value = value;
+  constructor(val) {
+    this.val = val;
     this.left = null;
     this.right = null;
   }
 }
 
-class BinarySearchTree {
+class BinarySearchPractice {
   constructor() {
     this.root = null;
   }
-
-  insert(value, curr = this.root) {
-    const newNode = new Node(value);
-    if (!this.root) {
-      this.root = newNode;
-    } else {
-      if (curr.value > value) {
-        if (!curr.left) {
-          curr.left = newNode;
-          return this;
-        }
-        this.insert(value, curr.left);
-      } else if (curr.value < value) {
-        if (!curr.right) {
-          curr.right = newNode;
-          return this;
-        }
-        this.insert(value, curr.right);
+  insert(val) {
+    const newNode = new Node(val);
+    if (!this.root) this.root = newNode;
+    else {
+      let curr = this.root;
+      while (true) {
+        if (val > curr.val) {
+          if (curr.right) {
+            curr = curr.right;
+          } else {
+            curr.right = newNode;
+            break;
+          }
+        } else if (val < curr.val) {
+          if (curr.left) {
+            curr = curr.left;
+          } else {
+            curr.left = newNode;
+            break;
+          }
+        } else return this;
       }
     }
     return this;
   }
+  traverse(curr = this.root) {
+    if (!curr) return;
+    this.traverse(curr.left);
+    console.log(curr.val);
+    this.traverse(curr.right);
+  }
 
-  findRecursive(value, curr = this.root) {
+  find(val, curr = this.root) {
     if (!curr) return undefined;
-    if (curr.value === value) return curr;
-    else if (curr.value > value) return this.findRecursive(value, curr.left);
-    else return this.findRecursive(value, curr.right);
+    else if (curr.val === val) return curr;
+    else if (curr.val > val) return this.find(val, curr.left);
+    else return this.find(val, curr.right);
   }
 
-  minRecursive(curr = this.root) {
-    if (!curr || !curr.left) return curr;
-    return this.minRecursive(curr.left);
-  }
-  //   maxNode(curr) {
-  //     if (curr) return undefined;
-  //     if (!curr.right) return curr;
-  //     return this.maxNode(this.right);
-  //   }
-
-  findParentRecursive(value, curr = this.root) {
-    if (!curr || this.root.value === value) return null;
-    if (
-      (curr.left && curr.left.value === value) ||
-      (curr.right && curr.right.value === value)
-    )
-      return curr;
-    const left = this.findParentRecursive(value, curr.left);
-    const right = this.findParentRecursive(value, curr.right);
-    return left || right;
+  findNodeAndParent(val, curr = this.root, prev = null) {
+    if (!curr) return [curr, prev];
+    else if (curr.val === val) return [curr, prev];
+    else if (curr.val > val)
+      return this.findNodeAndParent(val, curr.left, curr);
+    else return this.findNodeAndParent(val, curr.right, curr);
   }
 
-  remove(value) {
-    const foundNode = this.findRecursive(value);
-    const parentNode = this.findParentRecursive(value);
-
-    if (foundNode.left && foundNode.right) {
-      const minNode = this.minRecursive(foundNode.right);
-      const minNodeParent = this.findParentRecursive(minNode.value);
-      if (foundNode !== minNodeParent) {
-        foundNode.value = minNode.value;
-        minNodeParent.left = minNode.right;
-      } else {
-        foundNode.value = minNode.value;
-        foundNode.right = minNode.right;
-      }
-    } else if (foundNode.left || foundNode.right) {
-      if (!parentNode) return null;
-      if (parentNode.left && parentNode.left.value === value)
-        parentNode.left = foundNode.left || foundNode.right;
-      else parentNode.right = foundNode.left || foundNode.right;
-    } else {
-      if (!parentNode) return null;
-      if (parentNode.left && parentNode.left.value === value)
-        parentNode.left = null;
+  remove(val) {
+    if (!this.root) return null;
+    let [currNode, parentNode] = this.findNodeAndParent(val);
+    if (!currNode) return null;
+    const foundNodeCopy = JSON.parse(JSON.stringify(currNode));
+    const noOfChild =
+      currNode.left && currNode.right
+        ? 2
+        : currNode.left || currNode.right
+        ? 1
+        : 0;
+    if (noOfChild === 0) {
+      // If no child and no parent means only root exists
+      if (!parentNode) this.root = null;
+      else if (parentNode.left === currNode) parentNode.left = null;
       else parentNode.right = null;
+    } else if (noOfChild === 1) {
+      // If case of one child and no parents, we can set the child node as root
+      const availableNode = currNode.left || currNode.right;
+      if (!parentNode) this.root = availableNode;
+      else {
+        if (parentNode.left === currNode) parentNode.left = availableNode;
+        else parentNode.right = availableNode;
+      }
+    } else {
+      let lowestInRight = currNode.right;
+      let lowestInRightParent = currNode;
+      while (lowestInRight.left) {
+        lowestInRightParent = lowestInRight;
+        lowestInRight = lowestInRight.left;
+      }
+      currNode.val = lowestInRight.val;
+      if (lowestInRightParent.left === lowestInRight) {
+        lowestInRightParent.left = lowestInRight.right;
+      } else {
+        lowestInRightParent.right = lowestInRight.right;
+      }
     }
-    return foundNode;
+    return foundNodeCopy;
   }
 }
 
-var binarySearchTree = new BinarySearchTree();
+const binarySearchTree = new BinarySearchPractice();
 binarySearchTree
-  .insert(15)
-  .insert(20)
   .insert(10)
+  .insert(2)
+  .insert(7)
   .insert(12)
-  .insert(1)
-  .insert(5)
-  .insert(50);
-binarySearchTree.remove(50);
-binarySearchTree.root.right.value; // 20
-binarySearchTree.root.right.right; // null
-console.log('End of first')
-debugger;
-binarySearchTree.remove(5);
-binarySearchTree.root.left.left.value; // 1
-binarySearchTree.root.left.left.right; // null
+  .insert(9)
+  .insert(0)
+  .insert(11);
 
-var binarySearchTree = new BinarySearchTree();
-binarySearchTree
-  .insert(15)
-  .insert(20)
-  .insert(10)
-  .insert(12)
-  .insert(1)
-  .insert(5)
-  .insert(50);
+binarySearchTree.traverse();
+// [10, 2 ,7, 12, 9, 0,11]
+//       10
+//   2        12
+//  0  7    11
+//      9
 
-binarySearchTree.remove(1);
-binarySearchTree.root.left.left.value; // 5
-binarySearchTree.root.left.left.left; // null
-binarySearchTree.root.left.left.right; // null
+// console.log(binarySearchTree.find(3));
+// console.log(binarySearchTree.find(2));
+// console.log(binarySearchTree.find(4));
+// console.log(binarySearchTree.find(7));
 
-binarySearchTree.remove(20);
-binarySearchTree.root.right.value; // 50
-binarySearchTree.root.right.right; // null
-binarySearchTree.root.right.left; // null
+console.log(binarySearchTree.remove(10));
+binarySearchTree.traverse();
+console.log(binarySearchTree.remove(0));
+binarySearchTree.traverse();
+console.log(binarySearchTree.remove(12));
+binarySearchTree.traverse();
+console.log(binarySearchTree.remove(11));
+console.log(binarySearchTree.remove(2));
+console.log(binarySearchTree.remove(2));
+console.log(binarySearchTree.remove(9));
+console.log(binarySearchTree.remove(7));
+console.log(binarySearchTree.remove(2));
 
-var binarySearchTree = new BinarySearchTree();
-binarySearchTree
-  .insert(15)
-  .insert(20)
-  .insert(10)
-  .insert(12)
-  .insert(1)
-  .insert(5)
-  .insert(50)
-  .insert(60)
-  .insert(30)
-  .insert(25)
-  .insert(23)
-  .insert(24)
-  .insert(70);
-
-binarySearchTree.remove(10);
-binarySearchTree.root.left.value; // 12
-binarySearchTree.root.left.left.value; // 1
-binarySearchTree.root.left.left.right.value; // 5
-
-binarySearchTree.remove(50);
-binarySearchTree.root.right.value; // 20
-binarySearchTree.root.right.right.value; // 60
-binarySearchTree.root.right.right.left.value; // 30
-
-var binarySearchTree = new BinarySearchTree();
-binarySearchTree
-  .insert(22)
-  .insert(49)
-  .insert(85)
-  .insert(66)
-  .insert(95)
-  .insert(90)
-  .insert(100)
-  .insert(88)
-  .insert(93)
-  .insert(89);
-
-binarySearchTree.remove(85);
-binarySearchTree.root.right.right.value; // 88
-binarySearchTree.root.right.right.right.left.left.value; // 89
+binarySearchTree.traverse();
+binarySearchTree.insert(1000);
+binarySearchTree.insert(1005);
+binarySearchTree.traverse();

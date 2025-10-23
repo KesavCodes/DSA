@@ -28,9 +28,9 @@ class MaxBinaryHeap {
       this.values[0] = currValue;
       while (true) {
         let leftValue =
-          this.values[2 * currIndex + 1] || Number.MIN_SAFE_INTEGER;
+          this.values[2 * currIndex + 1] ?? Number.MIN_SAFE_INTEGER;
         let rightValue =
-          this.values[2 * currIndex + 2] || Number.MIN_SAFE_INTEGER;
+          this.values[2 * currIndex + 2] ?? Number.MIN_SAFE_INTEGER;
         if (leftValue > currValue || rightValue > currValue) {
           this.values[currIndex] =
             leftValue > rightValue ? leftValue : rightValue;
